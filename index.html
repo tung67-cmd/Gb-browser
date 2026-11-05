@@ -1,45 +1,33 @@
 <!DOCTYPE html>
 
-<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 1.0</title>
-
-<!-- Liaison avec le design -->
-
-<link rel="stylesheet" href="style.css">
-
-</head>
+<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 2.0</title> <link rel="stylesheet" href="style.css"> </head>
 
 <body>
 
-<header> <h1>💜 GB BROWSER</h1> <p>Your Gaming Internet</p> </header>
+<header> <h1>💜 GB BROWSER</h1> <p>Gaming Internet 2.0</p> </header>
 
 <main>
 
 <h2>🔎 Recherche Internet</h2>
 
-<form id="search"> <input id="address" type="text" placeholder="Rechercher ou entrer une adresse..." > <br> <button type="submit">Rechercher</button> </form>
+<form id="search"> <input id="address" placeholder="Google ou adresse Internet..." required> <button type="submit">Rechercher</button> </form>
 
 <h2>🌐 Applications</h2>
 
-<button onclick="openSite('https://www.google.com')"> 🔎 Google </button>
+<div class="buttons"> <button data-url="https://www.google.com">🔎 Google</button> <button data-url="https://www.youtube.com">▶ YouTube</button> <button data-url="https://www.wikipedia.org">🌍 Wikipédia</button> <button data-url="https://play.geforcenow.com">🎮 GeForce NOW</button> </div>
 
-<button onclick="openSite('https://www.youtube.com')"> ▶ YouTube </button>
+<h2>⭐ Favoris</h2> <div id="favorites"> <button data-url="https://www.google.com">Google</button> <button data-url="https://www.youtube.com">YouTube</button> </div>
 
-<button onclick="openSite('https://www.wikipedia.org')"> 🌍 Wikipédia </button>
+<h2>🕘 Historique</h2> <ul id="history"></ul>
 
-<button onclick="openSite('https://play.geforcenow.com')"> 🎮 GeForce NOW </button>
-
-<h2>⭐ Navigation</h2>
-
-<button onclick="history.back()">◀ Retour</button> <button onclick="history.forward()">Suivant ▶</button>
+<h2>🎮 Navigation</h2> <button id="back">◀ Retour</button> <button id="home">🏠 Accueil</button>
 
 </main>
 
-<footer> GB Browser 1.0 — Purple Gaming Edition </footer>
-
-<script> function openSite(url) { window.open(url, "_blank"); } document.getElementById("search").addEventListener("submit", function(e) { e.preventDefault(); const value = document.getElementById("address").value.trim(); if (!value) return; let url; if (/^https?:\/\//i.test(value)) { url = value; } else if (value.includes(".") && !value.includes(" ")) { url = "https://" + value; } else { url = "https://www.google.com/search?q=" + encodeURIComponent(value); } window.open(url, "_blank"); }); </script>
-
-<!-- Liaison avec les commandes -->
+<footer>GB Browser 2.0 — Purple Gaming Edition</footer>
 
 <script src="controls.js"></script>
+
+<script> const favorites = [ { name: "Google", url: "https://www.google.com" }, { name: "YouTube", url: "https://www.youtube.com" } ]; const historyList = []; function openSite(url) { historyList.unshift(url); historyList.splice(10); renderHistory(); window.open(url, "_blank"); } function renderHistory() { const list = document.getElementById("history"); list.innerHTML = ""; historyList.forEach(url => { const li = document.createElement("li"); const button = document.createElement("button"); button.textContent = url; button.addEventListener("click", () => openSite(url)); li.appendChild(button); list.appendChild(li); }); } document.querySelectorAll("[data-url]").forEach(button => { button.addEventListener("click", () => openSite(button.dataset.url)); }); document.getElementById("search").addEventListener("submit", event => { event.preventDefault(); const value = document.getElementById("address").value.trim(); if (!value) return; let url; if (/^https?:\/\//i.test(value)) { url = value; } else if (/^[\w-]+\.[a-z]{2,}/i.test(value)) { url = "https://" + value; } else { url = "https://www.google.com/search?q=" + encodeURIComponent(value); } openSite(url); }); document.getElementById("back").addEventListener("click", () => { history.back(); }); document.getElementById("home").addEventListener("click", () => { window.location.href = "index.html"; }); </script>
 
 </body> </html>
