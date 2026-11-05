@@ -1,15 +1,65 @@
-for (const gamepad of gamepads) {
-    if (!gamepad) continue;
+// GB BROWSER 2.1
 
-    gamepad.buttons.forEach((button, index) => {
-        const pressed = button.pressed;
+const GB = { home: "index.html",
 
-        if (pressed && !previousButtons[index]) {
-            handleButton(index);
-        }
+goHome() {
+    window.location.href = this.home;
+},
 
-        previousButtons[index] = pressed;
+goBack() {
+    window.history.back();
+},
+
+refresh() {
+    window.location.reload();
+},
+
+saveFavorite(url) {
+    let favorites = JSON.parse(
+        localStorage.getItem("gb_favorites") || "[]"
+    );
+
+    if (!favorites.includes(url)) {
+        favorites.push(url);
+    }
+
+    localStorage.setItem(
+        "gb_favorites",
+        JSON.stringify(favorites)
+    );
+},
+
+getFavorites() {
+    return JSON.parse(
+        localStorage.getItem("gb_favorites") || "[]"
+    );
+},
+
+saveHistory(url) {
+    let history = JSON.parse(
+        localStorage.getItem("gb_history") || "[]"
+    );
+
+    history.unshift({
+        url: url,
+        date: new Date().toLocaleString()
     });
+
+    history = history.slice(0, 30);
+
+    localStorage.setItem(
+        "gb_history",
+        JSON.stringify(history)
+    );
+},
+
+getHistory() {
+    return JSON.parse(
+        localStorage.getItem("gb_history") || "[]"
+    );
 }
 
-requestAnimationFrame(readGamepad);
+
+};
+
+window.GB = GB;
