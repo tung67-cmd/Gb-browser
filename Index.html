@@ -1,155 +1,45 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GB Browser</title>
 
-<style>
-* {
-    box-sizing: border-box;
-}
+<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 1.0</title>
 
-body {
-    margin: 0;
-    background: #090611;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
+<!-- Liaison avec le design -->
 
-header {
-    padding: 25px;
-    background: #160d29;
-    border-bottom: 2px solid #a855f7;
-}
+<link rel="stylesheet" href="style.css">
 
-h1 {
-    color: #c084fc;
-    font-size: 32px;
-    text-shadow: 0 0 15px #a855f7;
-}
-
-.subtitle {
-    color: #aaa;
-}
-
-main {
-    padding: 20px;
-}
-
-input {
-    width: 90%;
-    max-width: 500px;
-    padding: 15px;
-    border-radius: 12px;
-    border: 2px solid #9333ea;
-    background: #1b1230;
-    color: white;
-    font-size: 16px;
-}
-
-button {
-    padding: 15px;
-    margin: 8px;
-    border: 1px solid #a855f7;
-    border-radius: 12px;
-    background: #291344;
-    color: white;
-    font-size: 16px;
-}
-
-button:focus {
-    outline: 3px solid #e9d5ff;
-    background: #9333ea;
-}
-
-h2 {
-    color: #c084fc;
-    margin-top: 35px;
-}
-
-footer {
-    color: #777;
-    padding: 30px;
-}
-</style>
 </head>
 
 <body>
 
-<header>
-    <h1>💜 GB BROWSER</h1>
-    <div class="subtitle">Your Gaming Internet</div>
-</header>
+<header> <h1>💜 GB BROWSER</h1> <p>Your Gaming Internet</p> </header>
 
 <main>
 
-<h2>Recherche Internet</h2>
+<h2>🔎 Recherche Internet</h2>
 
-<form id="search">
-    <input id="address"
-    placeholder="Rechercher ou entrer une adresse...">
-    <br>
-    <button type="submit">🔎 Rechercher</button>
-</form>
+<form id="search"> <input id="address" type="text" placeholder="Rechercher ou entrer une adresse..." > <br> <button type="submit">Rechercher</button> </form>
 
-<h2>Mes applications</h2>
+<h2>🌐 Applications</h2>
 
-<button onclick="openSite('https://www.google.com')">
-🔎 Google
-</button>
+<button onclick="openSite('https://www.google.com')"> 🔎 Google </button>
 
-<button onclick="openSite('https://www.youtube.com')">
-▶ YouTube
-</button>
+<button onclick="openSite('https://www.youtube.com')"> ▶ YouTube </button>
 
-<button onclick="openSite('https://www.wikipedia.org')">
-🌍 Wikipédia
-</button>
+<button onclick="openSite('https://www.wikipedia.org')"> 🌍 Wikipédia </button>
 
-<button onclick="openSite('https://play.geforcenow.com')">
-🎮 GeForce NOW
-</button>
+<button onclick="openSite('https://play.geforcenow.com')"> 🎮 GeForce NOW </button>
 
-<h2>Navigation</h2>
+<h2>⭐ Navigation</h2>
 
-<button onclick="history.back()">◀ Retour</button>
-<button onclick="history.forward()">Suivant ▶</button>
+<button onclick="history.back()">◀ Retour</button> <button onclick="history.forward()">Suivant ▶</button>
 
 </main>
 
-<footer>
-GB Browser 1.0 — Purple Gaming Edition
-</footer>
+<footer> GB Browser 1.0 — Purple Gaming Edition </footer>
 
-<script>
-function openSite(url) {
-    window.open(url, "_blank");
-}
+<script> function openSite(url) { window.open(url, "_blank"); } document.getElementById("search").addEventListener("submit", function(e) { e.preventDefault(); const value = document.getElementById("address").value.trim(); if (!value) return; let url; if (/^https?:\/\//i.test(value)) { url = value; } else if (value.includes(".") && !value.includes(" ")) { url = "https://" + value; } else { url = "https://www.google.com/search?q=" + encodeURIComponent(value); } window.open(url, "_blank"); }); </script>
 
-document.getElementById("search").onsubmit = function(e) {
-    e.preventDefault();
+<!-- Liaison avec les commandes -->
 
-    let value = document.getElementById("address").value.trim();
+<script src="controls.js"></script>
 
-    if (!value) return;
-
-    let url;
-
-    if (value.includes(".") && !value.includes(" ")) {
-        url = value.startsWith("http")
-            ? value
-            : "https://" + value;
-    } else {
-        url = "https://www.google.com/search?q=" +
-              encodeURIComponent(value);
-    }
-
-    window.open(url, "_blank");
-};
-</script>
-
-</body>
-  </html>
-  
+</body> </html>
