@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 2.2</title> <link rel="stylesheet" href="style.css"> </head> <body>
+<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser</title> <link rel="stylesheet" href="style.css"> </head> <body>
 
-<header> <h1>💜 GB BROWSER</h1> <p>Gaming Internet 2.2</p> </header>
+<header> <h1>💜 GB BROWSER</h1> <p>Gaming Internet</p> </header>
 
 <main>
 
-<h2>🔎 Recherche Internet</h2>
+<h2>🔎 Recherche</h2>
 
 <form id="search"> <input id="address" placeholder="Adresse ou recherche Google..." required> <button type="submit">Rechercher</button> </form>
 
@@ -14,18 +14,18 @@
 
 <button data-url="https://www.google.com">Google</button> <button data-url="https://www.youtube.com">YouTube</button> <button data-url="https://www.wikipedia.org">Wikipédia</button> <button data-url="https://play.geforcenow.com">GeForce NOW</button>
 
-<h2>⭐ Ajouter aux favoris</h2> <button id="addFavorite">Ajouter la dernière adresse</button> <div id="favorites"></div>
+<h2>⭐ Favoris</h2> <button id="addFavorite">Ajouter aux favoris</button> <div id="favorites"></div>
 
 <h2>🕘 Historique</h2> <div id="history"></div>
 
-<h2>🎮 Navigation</h2> <button id="back">◀ Retour</button> <button id="home">🏠 Accueil</button> <button id="refresh">🔄 Actualiser</button>
+<button id="home">🏠 Accueil</button>
 
 </main>
 
-<footer>GB Browser 2.2 — Purple Gaming Edition</footer>
+<footer>GB Browser 2.2.1</footer>
 
 <script src="controls.js"></script>
 
-<script> let lastUrl = ""; function openSite(url) { lastUrl = url; GB.saveHistory(url); window.open(url, "_blank"); renderHistory(); } function renderFavorites() { const container = document.getElementById("favorites"); container.innerHTML = ""; GB.getFavorites().forEach(url => { const button = document.createElement("button"); button.textContent = url; button.onclick = () => openSite(url); container.appendChild(button); }); } function renderHistory() { const container = document.getElementById("history"); container.innerHTML = ""; GB.getHistory().forEach(item => { const button = document.createElement("button"); button.textContent = item.url; button.onclick = () => openSite(item.url); container.appendChild(button); }); } document.querySelectorAll("[data-url]").forEach(button => { button.onclick = () => openSite(button.dataset.url); }); document.getElementById("search").onsubmit = event => { event.preventDefault(); const value = document.getElementById("address").value.trim(); if (!value) return; const url = /^https?:\/\//i.test(value) ? value : value.includes(".") && !value.includes(" ") ? "https://" + value : "https://www.google.com/search?q=" + encodeURIComponent(value); openSite(url); }; document.getElementById("addFavorite").onclick = () => { if (!lastUrl) return; GB.saveFavorite(lastUrl); renderFavorites(); }; document.getElementById("back").onclick = () => GB.goBack(); document.getElementById("home").onclick = () => GB.goHome(); document.getElementById("refresh").onclick = () => GB.refresh(); renderFavorites(); renderHistory(); </script>
+<script> let lastUrl = ""; function openSite(url) { if (!/^https?:\/\//i.test(url)) return; lastUrl = url; GB.saveHistory(url); location.href = url; } function renderFavorites() { const container = document.getElementById("favorites"); container.innerHTML = ""; GB.getFavorites().forEach(url => { const button = document.createElement("button"); button.textContent = url; button.onclick = () => openSite(url); container.appendChild(button); }); } function renderHistory() { const container = document.getElementById("history"); container.innerHTML = ""; GB.getHistory().forEach(item => { const button = document.createElement("button"); button.textContent = item.url; button.onclick = () => openSite(item.url); container.appendChild(button); }); } document.querySelectorAll("[data-url]").forEach(button => { button.onclick = () => openSite(button.dataset.url); }); document.getElementById("search").onsubmit = event => { event.preventDefault(); const value = document.getElementById("address").value.trim(); if (!value) return; const url = /^https?:\/\//i.test(value) ? value : value.includes(".") && !value.includes(" ") ? "https://" + value : "https://www.google.com/search?q=" + encodeURIComponent(value); openSite(url); }; document.getElementById("addFavorite").onclick = () => { if (!lastUrl) return; GB.saveFavorite(lastUrl); renderFavorites(); }; document.getElementById("home").onclick = () => { location.href = "index.html"; }; renderFavorites(); renderHistory(); </script>
 
 </body> </html>
