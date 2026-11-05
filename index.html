@@ -1,51 +1,37 @@
 <!DOCTYPE html>
 
-<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 2.3</title> <link rel="stylesheet" href="style.css"> </head>
+<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 2.4</title> <link rel="stylesheet" href="style.css"> </head> <body>
 
-<body>
-
-<header> <h1>💜 GB BROWSER</h1> <p>Gaming Internet 2.3</p> </header>
+<header> <h1>💜 GB BROWSER</h1> <p>Gaming Internet 2.4</p> </header>
 
 <main>
 
-<section id="homePage">
-    <h2>🔎 Recherche Internet</h2>
+<section id="home">
 
-    <form id="search">
-        <input id="address" type="text"
-        placeholder="Adresse ou recherche Google..." required>
-        <button type="submit">Rechercher</button>
-    </form>
+<h2>🔎 Recherche Internet</h2>
 
-    <h2>🌐 Applications</h2>
+<form id="search"> <input id="address" placeholder="Adresse ou recherche..." required> <button type="submit">Rechercher</button> </form>
 
-    <button data-url="https://www.google.com">Google</button>
-    <button data-url="https://www.youtube.com">YouTube</button>
-    <button data-url="https://www.wikipedia.org">Wikipédia</button>
-    <button data-url="https://play.geforcenow.com">GeForce NOW</button>
+<h2>🌐 Applications</h2>
 
-    <h2>⭐ Favoris</h2>
-    <button id="addFavorite">Ajouter l'adresse saisie</button>
-    <div id="favorites"></div>
+<button data-url="https://www.google.com">Google</button> <button data-url="https://www.youtube.com">YouTube</button> <button data-url="https://www.wikipedia.org">Wikipédia</button> <button data-url="https://play.geforcenow.com">GeForce NOW</button>
 
-    <h2>🕘 Historique</h2>
-    <div id="history"></div>
+<h2>⭐ Favoris</h2> <div id="favorites"></div>
+
+<button id="addFavorite">Ajouter l'adresse aux favoris</button>
+
+<h2>🕘 Historique</h2> <div id="history"></div> <button id="clearHistory">Effacer l'historique</button>
+
 </section>
 
-<section id="browserPage" hidden>
-    <h2>🌐 Navigation</h2>
-    <p id="currentAddress"></p>
-    <p>Le site demandé va s'ouvrir dans un nouvel onglet.</p>
-    <button id="returnHome">🏠 Retour à GB Browser</button>
-</section>
-
+<section id="navigation"> <h2>🎮 Navigation</h2> <button id="back">◀ Retour</button> <button id="forward">Suivant ▶</button> <button id="refresh">🔄 Actualiser</button> <button id="homeButton">🏠 Accueil</button> </section>
 
 </main>
 
-<footer>GB Browser 2.3 — Purple Edition</footer>
+<footer>GB Browser 2.4 — Purple Edition</footer>
 
 <script src="controls.js"></script>
 
-<script> const addressInput = document.getElementById("address"); const homePage = document.getElementById("homePage"); const browserPage = document.getElementById("browserPage"); let lastUrl = ""; function openSite(url) { if (!/^https?:\/\//i.test(url)) return; lastUrl = url; if (window.GB) { GB.saveHistory(url); } const opened = window.open(url, "_blank"); if (!opened) { alert("Ouverture bloquée. Autorise les fenêtres pop-up dans ton navigateur."); } renderHistory(); } function renderFavorites() { const container = document.getElementById("favorites"); container.replaceChildren(); const favorites = window.GB ? GB.getFavorites() : []; favorites.forEach(url => { const button = document.createElement("button"); button.textContent = url; button.onclick = () => openSite(url); container.appendChild(button); }); } function renderHistory() { const container = document.getElementById("history"); container.replaceChildren(); const historyItems = window.GB ? GB.getHistory() : []; historyItems.forEach(item => { const button = document.createElement("button"); button.textContent = item.url; button.onclick = () => openSite(item.url); container.appendChild(button); }); } function addFavorite() { const value = addressInput.value.trim(); if (!value) { alert("Entre d'abord une adresse."); return; } let url = value; if (!/^https?:\/\//i.test(url)) { url = "https://" + url; } if (window.GB) { GB.saveFavorite(url); } renderFavorites(); } document.querySelectorAll("[data-url]").forEach(button => { button.addEventListener("click", () => { openSite(button.dataset.url); }); }); document.getElementById("search").addEventListener("submit", event => { event.preventDefault(); const value = addressInput.value.trim(); if (!value) return; let url; if (/^https?:\/\//i.test(value)) { url = value; } else if (/^[\w-]+\.[a-z]{2,}/i.test(value)) { url = "https://" + value; } else { url = "https://www.google.com/search?q=" + encodeURIComponent(value); } openSite(url); }); document.getElementById("addFavorite") .addEventListener("click", addFavorite); document.getElementById("returnHome") .addEventListener("click", () => { browserPage.hidden = true; homePage.hidden = false; }); renderFavorites(); renderHistory(); </script>
+<script> let lastUrl = ""; function openSite(url) { if (!/^https?:\/\//i.test(url)) return; lastUrl = url; GB.saveHistory(url); const tab = window.open(url, "_blank"); if (!tab) { alert("Autorise les fenêtres pop-up pour continuer."); } renderHistory(); } function renderFavorites() { const box = document.getElementById("favorites"); box.replaceChildren(); GB.getFavorites().forEach(url => { const row = document.createElement("div"); const open = document.createElement("button"); open.textContent = "⭐ " + url; open.onclick = () => openSite(url); const remove = document.createElement("button"); remove.textContent = "❌"; remove.onclick = () => { const list = GB.getFavorites().filter(item => item !== url); localStorage.setItem("gb_favorites", JSON.stringify(list)); renderFavorites(); }; row.append(open, remove); box.appendChild(row); }); } function renderHistory() { const box = document.getElementById("history"); box.replaceChildren(); GB.getHistory().forEach(item => { const button = document.createElement("button"); button.textContent = item.url; button.onclick = () => openSite(item.url); box.appendChild(button); }); } document.querySelectorAll("[data-url]").forEach(button => { button.onclick = () => openSite(button.dataset.url); }); document.getElementById("search").onsubmit = event => { event.preventDefault(); const value = document.getElementById("address").value.trim(); if (!value) return; const url = /^https?:\/\//i.test(value) ? value : /^[\w-]+\.[a-z]{2,}/i.test(value) ? "https://" + value : "https://www.google.com/search?q=" + encodeURIComponent(value); openSite(url); }; document.getElementById("addFavorite").onclick = () => { const value = document.getElementById("address").value.trim(); if (!value) { alert("Entre une adresse dans la barre de recherche."); return; } const url = /^https?:\/\//i.test(value) ? value : "https://" + value; GB.saveFavorite(url); renderFavorites(); }; document.getElementById("clearHistory").onclick = () => { localStorage.removeItem("gb_history"); renderHistory(); }; document.getElementById("homeButton").onclick = () => { window.scrollTo(0, 0); }; document.getElementById("back").onclick = () => { window.history.back(); }; document.getElementById("forward").onclick = () => { window.history.forward(); }; document.getElementById("refresh").onclick = () => { window.location.reload(); }; renderFavorites(); renderHistory(); </script>
 
 </body> </html>
