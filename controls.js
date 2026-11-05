@@ -1,65 +1,92 @@
-// GB BROWSER 2.1
+// GB BROWSER 3.0 // Configuration joystick R36SX / GB350
 
-const GB = { home: "index.html",
+let selectedIndex = 0;
 
-goHome() {
-    window.location.href = this.home;
-},
+function getFocusableElements() { return [...document.querySelectorAll( "button:not(:disabled), input:not(:disabled)" )].filter(el => el.offsetParent !== null); }
 
-goBack() {
-    window.history.back();
-},
+function selectElement(index) { const elements = getFocusableElements();
 
-refresh() {
-    window.location.reload();
-},
+if (!elements.length) return;
 
-saveFavorite(url) {
-    let favorites = JSON.parse(
-        localStorage.getItem("gb_favorites") || "[]"
-    );
+selectedIndex =
+    (index + elements.length) % elements.length;
 
-    if (!favorites.includes(url)) {
-        favorites.push(url);
-    }
+elements[selectedIndex].focus();
 
-    localStorage.setItem(
-        "gb_favorites",
-        JSON.stringify(favorites)
-    );
-},
 
-getFavorites() {
-    return JSON.parse(
-        localStorage.getItem("gb_favorites") || "[]"
-    );
-},
+}
 
-saveHistory(url) {
-    let history = JSON.parse(
-        localStorage.getItem("gb_history") || "[]"
-    );
+function handleJoystickButton(index) { switch (index) {
 
-    history.unshift({
-        url: url,
-        date: new Date().toLocaleString()
-    });
+    case 0: // A
+        document.activeElement?.click();
+        break;
 
-    history = history.slice(0, 30);
+    case 1: // B
+        history.back();
+        break;
 
-    localStorage.setItem(
-        "gb_history",
-        JSON.stringify(history)
-    );
-},
+    case 2: // X
+        location.reload();
+        break;
 
-getHistory() {
-    return JSON.parse(
-        localStorage.getItem("gb_history") || "[]"
-    );
+    case 3: // Y
+        location.href = "index.html";
+        break;
+
+    case 4: // L1
+        history.back();
+        break;
+
+    case 5: // R1
+        history.forward();
+        break;
+
+    case 6: // SELECT
+        document.getElementById("favorites")
+            ?.scrollIntoView();
+        break;
+
+    case 7: // START
+        document.getElementById("address")?.focus();
+        break;
 }
 
 
-};
+}
 
-window.GB = GB;
+let previousButtons = [];
+
+function readJoystick() { const gamepads = navigator.getGamepads();
+
+for (const pad of gamepads) {
+    if (!pad) continue;
+
+    pad.buttons.forEach((button, index) => {
+        if (button.pressed && !previousButtons[index]) {
+            handleJoystickButton(index);
+        }
+
+        previousButtons[index] = button.pressed;
+    });
+
+    // Croix directionnelle ou joystick analogique
+    if (pad.axes.length >= 2) {
+        if (pad.axes[1] < -0.6) {
+            selectElement(selectedIndex - 1);
+        }
+
+        if (pad.axes[1] > 0.6) {
+            selectElement(selectedIndex + 1);
+        }
+    }
+}
+
+requestAnimationFrame(readJoystick);
+
+
+}
+
+window.addEventListener("gamepadconnected", () => { console.log("Joystick GB350 détecté !"); previousButtons = []; requestAnimationFrame(readJoystick); });
+
+window.GBJoystick = { selectElement };
