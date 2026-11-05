@@ -1,25 +1,62 @@
+/* GB BROWSER 3.0 / / Interface R36SX / GB350 */
+
 { box-sizing: border-box; }
 
-body { margin: 0; padding: 0; background: #090611; color: white; font-family: Arial, sans-serif; text-align: center; }
+html { scroll-behavior: smooth; }
 
-header { background: #160d29; padding: 12px; border-bottom: 3px solid #a855f7; }
+body { margin: 0; background: #090611; color: white; font-family: Arial, sans-serif; text-align: center; font-size: 16px; }
 
-h1 { color: #c084fc; font-size: 28px; text-shadow: 0 0 12px #a855f7; }
+header { background: #160d29; border-bottom: 3px solid #a855f7; padding: 8px; }
 
-h2 { color: #c084fc; font-size: 19px; margin-top: 25px; }
+header h1 { color: #c084fc; font-size: 25px; margin: 5px; text-shadow: 0 0 10px #a855f7; }
 
-main { padding: 12px; max-width: 700px; margin: auto; }
+header p { margin: 5px; color: #ddd; }
 
-input { width: 90%; max-width: 450px; padding: 13px; background: #1b1230; border: 2px solid #9333ea; border-radius: 10px; color: white; font-size: 16px; }
+main { width: 100%; max-width: 640px; margin: auto; padding: 10px; }
 
-button { background: #291344; color: white; border: 2px solid #9333ea; border-radius: 12px; padding: 13px; margin: 6px; font-size: 15px; cursor: pointer; }
+h2 { color: #c084fc; font-size: 19px; margin: 18px 0 10px; }
 
-button:focus { background: #9333ea; outline: 3px solid #e9d5ff; }
+input { width: 95%; padding: 12px; background: #1b1230; border: 2px solid #9333ea; border-radius: 10px; color: white; font-size: 16px; margin: 5px; }
+
+button { min-width: 105px; min-height: 42px; padding: 10px; margin: 5px; background: #291344; color: white; border: 2px solid #9333ea; border-radius: 10px; font-size: 14px; cursor: pointer; }
+
+button:focus { outline: 3px solid #e9d5ff; background: #9333ea; color: white; }
 
 button:active { background: #7e22ce; }
 
-.buttons { display: flex; flex-wrap: wrap; justify-content: center; }
+#favorites, #history { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
 
-li { list-style: none; margin: 5px; }
+footer { padding: 15px; color: #999; font-size: 12px; }
 
-footer { color: #999; padding: 20px; font-size: 12px; }
+[hidden] { display: none !important; }
+
+@media (max-width: 480px) { header h1 { font-size: 22px; }
+
+main {
+    padding: 6px;
+}
+
+button {
+    min-width: 95px;
+    font-size: 13px;
+}
+
+input {
+    font-size: 14px;
+}
+
+
+}
+
+@media (orientation: landscape) { main { max-width: 640px; }
+
+header {
+    padding: 5px;
+}
+
+h2 {
+    margin-top: 12px;
+}
+
+
+                                }
