@@ -1,21 +1,25 @@
-/* GB BROWSER 1.0 */
-
 { box-sizing: border-box; }
 
 body { margin: 0; padding: 0; background: #090611; color: white; font-family: Arial, sans-serif; text-align: center; }
 
-header { background: #160d29; padding: 15px; border-bottom: 3px solid #a855f7; }
+header { background: #160d29; padding: 12px; border-bottom: 3px solid #a855f7; }
 
 h1 { color: #c084fc; font-size: 28px; text-shadow: 0 0 12px #a855f7; }
 
-h2 { color: #c084fc; font-size: 20px; }
+h2 { color: #c084fc; font-size: 19px; margin-top: 25px; }
 
-main { padding: 15px; }
+main { padding: 12px; max-width: 700px; margin: auto; }
 
-input { width: 90%; padding: 12px; background: #1b1230; border: 2px solid #9333ea; border-radius: 10px; color: white; font-size: 16px; }
+input { width: 90%; max-width: 450px; padding: 13px; background: #1b1230; border: 2px solid #9333ea; border-radius: 10px; color: white; font-size: 16px; }
 
-button { background: #291344; color: white; border: 2px solid #9333ea; border-radius: 12px; padding: 12px; margin: 6px; font-size: 15px; }
+button { background: #291344; color: white; border: 2px solid #9333ea; border-radius: 12px; padding: 13px; margin: 6px; font-size: 15px; cursor: pointer; }
 
 button:focus { background: #9333ea; outline: 3px solid #e9d5ff; }
 
-footer { color: #999; padding: 15px; }
+button:active { background: #7e22ce; }
+
+.buttons { display: flex; flex-wrap: wrap; justify-content: center; }
+
+li { list-style: none; margin: 5px; }
+
+footer { color: #999; padding: 20px; font-size: 12px; }
