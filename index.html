@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 
-<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 2.4</title> <link rel="stylesheet" href="style.css"> </head> <body>
+<html lang="fr"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>GB Browser 3.0</title> <link rel="stylesheet" href="style.css"> </head>
 
-<header> <h1>💜 GB BROWSER</h1> <p>Gaming Internet 2.4</p> </header>
+<body>
+
+<header> <h1>💜 GB BROWSER</h1> <p>Purple Gaming Edition 3.0</p> </header>
 
 <main>
 
@@ -10,28 +12,46 @@
 
 <h2>🔎 Recherche Internet</h2>
 
-<form id="search"> <input id="address" placeholder="Adresse ou recherche..." required> <button type="submit">Rechercher</button> </form>
+<form id="search"> <input id="address" type="text" placeholder="Adresse ou recherche Google..." required> <button type="submit">Rechercher</button> </form>
 
 <h2>🌐 Applications</h2>
 
-<button data-url="https://www.google.com">Google</button> <button data-url="https://www.youtube.com">YouTube</button> <button data-url="https://www.wikipedia.org">Wikipédia</button> <button data-url="https://play.geforcenow.com">GeForce NOW</button>
+<button type="button" data-url="https://www.google.com"> Google </button>
 
-<h2>⭐ Favoris</h2> <div id="favorites"></div>
+<button type="button" data-url="https://www.youtube.com"> YouTube </button>
 
-<button id="addFavorite">Ajouter l'adresse aux favoris</button>
+<button type="button" data-url="https://www.wikipedia.org"> Wikipédia </button>
 
-<h2>🕘 Historique</h2> <div id="history"></div> <button id="clearHistory">Effacer l'historique</button>
+<button type="button" data-url="https://play.geforcenow.com"> GeForce NOW </button>
+
+<h2>⭐ Favoris</h2>
+
+<div id="favorites"></div>
+
+<button type="button" id="addFavorite"> Ajouter aux favoris </button>
+
+<h2>🕘 Historique</h2>
+
+<div id="history"></div>
+
+<button type="button" id="clearHistory"> Effacer l'historique </button>
 
 </section>
 
-<section id="navigation"> <h2>🎮 Navigation</h2> <button id="back">◀ Retour</button> <button id="forward">Suivant ▶</button> <button id="refresh">🔄 Actualiser</button> <button id="homeButton">🏠 Accueil</button> </section>
+<section id="navigation">
+
+<h2>🎮 Navigation</h2>
+
+<button type="button" id="back">◀ Retour</button> <button type="button" id="forward">Suivant ▶</button> <button type="button" id="refresh">🔄 Actualiser</button> <button type="button" id="homeButton">🏠 Accueil</button>
+
+</section>
 
 </main>
 
-<footer>GB Browser 2.4 — Purple Edition</footer>
+<footer> GB Browser 3.0 — Purple Edition </footer>
 
 <script src="controls.js"></script>
 
-<script> let lastUrl = ""; function openSite(url) { if (!/^https?:\/\//i.test(url)) return; lastUrl = url; GB.saveHistory(url); const tab = window.open(url, "_blank"); if (!tab) { alert("Autorise les fenêtres pop-up pour continuer."); } renderHistory(); } function renderFavorites() { const box = document.getElementById("favorites"); box.replaceChildren(); GB.getFavorites().forEach(url => { const row = document.createElement("div"); const open = document.createElement("button"); open.textContent = "⭐ " + url; open.onclick = () => openSite(url); const remove = document.createElement("button"); remove.textContent = "❌"; remove.onclick = () => { const list = GB.getFavorites().filter(item => item !== url); localStorage.setItem("gb_favorites", JSON.stringify(list)); renderFavorites(); }; row.append(open, remove); box.appendChild(row); }); } function renderHistory() { const box = document.getElementById("history"); box.replaceChildren(); GB.getHistory().forEach(item => { const button = document.createElement("button"); button.textContent = item.url; button.onclick = () => openSite(item.url); box.appendChild(button); }); } document.querySelectorAll("[data-url]").forEach(button => { button.onclick = () => openSite(button.dataset.url); }); document.getElementById("search").onsubmit = event => { event.preventDefault(); const value = document.getElementById("address").value.trim(); if (!value) return; const url = /^https?:\/\//i.test(value) ? value : /^[\w-]+\.[a-z]{2,}/i.test(value) ? "https://" + value : "https://www.google.com/search?q=" + encodeURIComponent(value); openSite(url); }; document.getElementById("addFavorite").onclick = () => { const value = document.getElementById("address").value.trim(); if (!value) { alert("Entre une adresse dans la barre de recherche."); return; } const url = /^https?:\/\//i.test(value) ? value : "https://" + value; GB.saveFavorite(url); renderFavorites(); }; document.getElementById("clearHistory").onclick = () => { localStorage.removeItem("gb_history"); renderHistory(); }; document.getElementById("homeButton").onclick = () => { window.scrollTo(0, 0); }; document.getElementById("back").onclick = () => { window.history.back(); }; document.getElementById("forward").onclick = () => { window.history.forward(); }; document.getElementById("refresh").onclick = () => { window.location.reload(); }; renderFavorites(); renderHistory(); </script>
+<script> "use strict"; const address = document.getElementById("address"); function makeURL(value) { value = value.trim(); if (!value) return null; if (/^https?:\/\//i.test(value)) { return value; } if (/^[\w-]+(\.[\w-]+)+/.test(value)) { return "https://" + value; } return "https://www.google.com/search?q=" + encodeURIComponent(value); } function openSite(url) { if (!url) return; try { const newTab = window.open(url, "_blank"); if (!newTab) { alert("Ouverture bloquée. Autorise les fenêtres pop-up."); } else { saveHistory(url); } } catch (error) { alert("Impossible d'ouvrir ce site."); console.error(error); } } function saveHistory(url) { let history = JSON.parse( localStorage.getItem("gb_history") || "[]" ); history.unshift({ url: url, date: new Date().toLocaleString() }); history = history.slice(0, 30); localStorage.setItem( "gb_history", JSON.stringify(history) ); renderHistory(); } function getFavorites() { return JSON.parse( localStorage.getItem("gb_favorites") || "[]" ); } function renderFavorites() { const box = document.getElementById("favorites"); box.replaceChildren(); getFavorites().forEach(url => { const row = document.createElement("div"); const open = document.createElement("button"); open.textContent = "⭐ " + url; open.onclick = () => openSite(url); const remove = document.createElement("button"); remove.textContent = "❌"; remove.onclick = () => { const updated = getFavorites() .filter(item => item !== url); localStorage.setItem( "gb_favorites", JSON.stringify(updated) ); renderFavorites(); }; row.append(open, remove); box.appendChild(row); }); } function renderHistory() { const box = document.getElementById("history"); box.replaceChildren(); const history = JSON.parse( localStorage.getItem("gb_history") || "[]" ); history.forEach(item => { const button = document.createElement("button"); button.textContent = item.url; button.onclick = () => openSite(item.url); box.appendChild(button); }); } document.querySelectorAll("[data-url]").forEach(button => { button.addEventListener("click", () => { openSite(button.dataset.url); }); }); document.getElementById("search").addEventListener( "submit", event => { event.preventDefault(); openSite(makeURL(address.value)); } ); document.getElementById("addFavorite").onclick = () => { const url = makeURL(address.value); if (!url) { alert("Entre une adresse d'abord."); return; } const favorites = getFavorites(); if (!favorites.includes(url)) { favorites.push(url); localStorage.setItem( "gb_favorites", JSON.stringify(favorites) ); } renderFavorites(); }; document.getElementById("clearHistory").onclick = () => { localStorage.removeItem("gb_history"); renderHistory(); }; document.getElementById("back").onclick = () => { history.back(); }; document.getElementById("forward").onclick = () => { history.forward(); }; document.getElementById("refresh").onclick = () => { location.reload(); }; document.getElementById("homeButton").onclick = () => { window.scrollTo(0, 0); }; renderFavorites(); renderHistory(); </script>
 
 </body> </html>
